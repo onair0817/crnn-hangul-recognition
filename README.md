@@ -1,2 +1,2 @@
 # crnn-printed-hangul
-CRNN-based printed Hangul learning code
+CRNN-based printed Hangul training code
