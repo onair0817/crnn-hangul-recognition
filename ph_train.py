@@ -16,8 +16,6 @@ from utils.training import Logger, ModelSnapshot
 import ph_utils
 from ph_gt_data import GTData
 
-_this_basename_ = os.path.splitext(os.path.basename(__file__))[0]
-
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 PICKLE_DIR = './pickles/'

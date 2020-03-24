@@ -16,6 +16,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 PICKLE_DIR = './pickles/'
 PICKLE_NAME = 'printed_hangul_all.pkl'
 CHECKPOINT_PATH = './checkpoints/202003230905_crnn_lstm_ph_all_v1/weights.040000.h5'
+PLOT_NAME = 'crnn_lstm_ph_all_v1'
 
 # Validation
 val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
@@ -53,8 +54,6 @@ font = {'family': 'sans',
         'size': 14,
         }
 
-plot_name = 'crnn_lstm_kp_syllable_v1'
-
 # for i in range(len(res)):
 for i in range(30):
     # best path, real ocr applications use beam search with dictionary and language model
@@ -79,7 +78,7 @@ for i in range(30):
     plt.text(0, 60, 'GT: %-24s RT: %-24s %0.2f' % (gt_str, res_str, ed_norm), fontdict=font)
 
     # file_name = 'plots/%s_recognition_%03d.pgf' % (plot_name, i)
-    file_name = 'plots/%s_recogniiton_%03d.png' % (plot_name, i)
+    file_name = 'plots/%s_recognition_%03d.png' % (PLOT_NAME, i)
     # plt.savefig(file_name, bbox_inches='tight', dpi=300)
     print(file_name)
 
