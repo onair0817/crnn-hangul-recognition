@@ -6,5 +6,6 @@
 **/*.jpg
 **/*.png
 **/checkpoints
+**/pickles
 **/images
 **/tmp.py
