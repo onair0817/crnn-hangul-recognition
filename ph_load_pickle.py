@@ -1,6 +1,6 @@
 import pickle
 
-from ph_gt_data import GTData
+from ph_gt_data import GTUtility
 
 PICKLE_DIR_PATH = './pickles/'
 

@@ -9,7 +9,7 @@ from crnn_data import InputGenerator
 from crnn_utils import decode
 
 import ph_utils
-from ph_gt_data import GTData
+from ph_gt_data import GTUtility
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 

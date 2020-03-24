@@ -9,7 +9,7 @@ import numpy as np
 from itertools import chain
 from sklearn.feature_extraction.text import CountVectorizer
 
-from ph_gt_data import GTData
+from ph_gt_data import GTUtility
 
 
 def create_pickle(gt_data, output_dir, fname):
@@ -53,7 +53,7 @@ def get_ph_dict(data_path, file_name):
     return ph
 
 
-def get_image_with_box(data_path='C:/Users/admin/dev/data/', num=10, att_type='syllable'):
+def get_image_with_box(data_path, num=10, att_type='syllable'):
     gt_util = ''
 
     if att_type == 'syllable':
@@ -104,5 +104,5 @@ def get_image_with_box(data_path='C:/Users/admin/dev/data/', num=10, att_type='s
         plt.savefig('images/box/' + img_name)
 
 
-# ph_dict = get_ph_dict(data_path='C:/Users/admin/dev/data/', file_name='printed_hangul_syllable.pkl')
-# get_image_with_box(data_path='C:/Users/admin/dev/data/', num=10, att_type='syllable')
+# ph_dict = get_ph_dict(data_path='/diarl_data/hangul/', file_name='printed_hangul_all.pkl')
+# get_image_with_box(data_path='/diarl_data/hangul/', num=10, att_type='all')

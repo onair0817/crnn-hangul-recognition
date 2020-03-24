@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 
 from ssd_data import BaseGTUtility
-from ph_gt_data import GTData
+from ph_gt_data import GTUtility
 
 
 def random_split(self, split=0.8):

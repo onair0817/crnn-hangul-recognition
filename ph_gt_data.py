@@ -7,7 +7,7 @@ from ssd_data import BaseGTUtility
 import ph_utils
 
 
-class GTData(BaseGTUtility):
+class GTUtility(BaseGTUtility):
     """
     GT Data in COCO-Text format for printed Hangul text dataset
 
@@ -34,16 +34,16 @@ class GTData(BaseGTUtility):
         type_name = ''
 
         if att_type == 'syllable':
-            self.image_path = os.path.join(data_path, '01_printed_syllable_images')
+            self.image_path = os.path.join(data_path, 'printed_syllable_images')
             type_name = '글자(음절)'
         elif att_type == 'word':
-            self.image_path = os.path.join(data_path, '01_printed_word_images')
+            self.image_path = os.path.join(data_path, 'printed_word_images')
             type_name = '단어(어절)'
         elif att_type == 'sentence':
-            self.image_path = os.path.join(data_path, '01_printed_sentence_images')
+            self.image_path = os.path.join(data_path, 'printed_sentence_images')
             type_name = '문장'
         elif att_type == 'all':
-            self.image_path = os.path.join(data_path, '01_printed_images')
+            self.image_path = os.path.join(data_path, 'printed_images')
             type_name = '전체'
         else:
             print(' @ Error - Attribute type missing!')
@@ -107,12 +107,13 @@ class GTData(BaseGTUtility):
 
 
 ATTRIBUTE_TYPE = 'all'
+DATA_PATH = '/diarl_data/hangul/'
 PICKLE_DIR = './pickles/'
 FILE_NAME = 'printed_hangul_all.pkl'
 
 if __name__ == '__main__':
     # Create GT data in COCO-Text format
-    gt_util = GTData(data_path='C:/Users/admin/dev/data/', att_type=ATTRIBUTE_TYPE, only_with_label=True)
+    gt_util = GTUtility(data_path=DATA_PATH, att_type=ATTRIBUTE_TYPE, only_with_label=True)
 
     ph_utils.create_pickle(gt_util, PICKLE_DIR, FILE_NAME)
 

@@ -14,7 +14,7 @@ from crnn_utils import decode
 from utils.training import Logger, ModelSnapshot
 
 import ph_utils
-from ph_gt_data import GTData
+from ph_gt_data import GTUtility
 
 os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
