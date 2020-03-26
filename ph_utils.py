@@ -9,8 +9,6 @@ import numpy as np
 from itertools import chain
 from sklearn.feature_extraction.text import CountVectorizer
 
-from ph_gt_data import GTUtility
-
 
 def create_pickle(gt_data, output_dir, fname):
     import pickle

@@ -41,21 +41,22 @@ def random_split(self, split=0.8):
     return gtu1, gtu2
 
 
+PICKLE_DIR = './pickles-ti/'
 PICKLE = 'printed_hangul_all.pkl'
 TRAIN = 'printed_hangul_all_train.pkl'
 VALIDATION = 'printed_hangul_all_val.pkl'
 
-with open(PICKLE, 'rb') as f:
+with open(PICKLE_DIR + PICKLE, 'rb') as f:
     gt_util_cracker = pickle.load(f)
 
 gt_util_train, gt_util_val = random_split(gt_util_cracker)
 
 print(' # Train pkl file saves to %s ...' % TRAIN)
-pickle.dump(gt_util_train, open(TRAIN, 'wb'))
+pickle.dump(gt_util_train, open(PICKLE_DIR + TRAIN, 'wb'))
 print(' # Done')
 
 print(' # Validation pkl file saves to %s ...' % VALIDATION)
-pickle.dump(gt_util_val, open(VALIDATION, 'wb'))
+pickle.dump(gt_util_val, open(PICKLE_DIR + VALIDATION, 'wb'))
 print(' # Done')
 
 print(len(gt_util_train.image_names))

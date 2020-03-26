@@ -108,6 +108,7 @@ class GTUtility(BaseGTUtility):
 
 ATTRIBUTE_TYPE = 'all'
 DATA_PATH = '/diarl_data/hangul/'
+# DATA_PATH = 'C:/Users/admin/dev/data/'
 PICKLE_DIR = './pickles/'
 FILE_NAME = 'printed_hangul_all.pkl'
 
