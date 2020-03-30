@@ -60,7 +60,7 @@ optimizer = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True, clipnorm=5)
 # optimizer = Adam(lr=0.02, epsilon=0.001, clipnorm=1.)
 
 # dummy loss, loss is computed in lambda layer
-model.compile(loss={'focal_ctc_loss': lambda y_true, y_pred: y_pred}, optimizer=optimizer)
+model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=optimizer)
 
 model.summary()
 

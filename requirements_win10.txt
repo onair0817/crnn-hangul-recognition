@@ -23,9 +23,9 @@ joblib==0.14.1
 jsonschema==3.2.0
 jupyter-client==6.0.0
 jupyter-core==4.6.3
-Keras==2.2.0
-Keras-Applications==1.0.2
-Keras-Preprocessing==1.0.1
+Keras==2.2.4
+Keras-Applications==1.0.8
+Keras-Preprocessing==1.1.0
 kiwisolver==1.1.0
 livelossplot==0.4.2
 Markdown==3.2.1
@@ -60,8 +60,8 @@ scipy==1.4.1
 Send2Trash==1.5.0
 six==1.14.0
 sklearn==0.0
-tensorboard==1.15.0
-tensorflow-gpu==1.15.2
+tensorboard==1.9.0
+tensorflow-gpu==1.9.0
 termcolor==1.1.0
 terminado==0.8.3
 testpath==0.4.4
