@@ -15,7 +15,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 PICKLE_DIR = './pickles/'
 PICKLE_NAME = 'printed_hangul_all.pkl'
-CHECKPOINT_PATH = './checkpoints/202003230905_crnn_lstm_ph_all_v1/weights.040000.h5'
+CHECKPOINT_PATH = './checkpoints/202003271843_crnn_lstm_ph_all_v1/weights.200000.h5'
 BATCH_SIZE = 100
 
 # Validation

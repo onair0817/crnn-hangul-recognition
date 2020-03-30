@@ -41,10 +41,10 @@ def random_split(self, split=0.8):
     return gtu1, gtu2
 
 
-PICKLE_DIR = './pickles-ti/'
-PICKLE = 'printed_hangul_all.pkl'
-TRAIN = 'printed_hangul_all_train.pkl'
-VALIDATION = 'printed_hangul_all_val.pkl'
+PICKLE_DIR = './pickles/'
+PICKLE = 'printed_hangul_word.pkl'
+TRAIN = 'printed_hangul_word_train.pkl'
+VALIDATION = 'printed_hangul_word_val.pkl'
 
 with open(PICKLE_DIR + PICKLE, 'rb') as f:
     gt_util_cracker = pickle.load(f)
