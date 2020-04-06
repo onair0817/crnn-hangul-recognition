@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import editdistance
 import pickle
+import time
 
 from crnn_model import CRNN
 from crnn_data import InputGenerator
@@ -15,8 +16,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 PICKLE_DIR = './pickles/'
 PICKLE_NAME = 'printed_hangul_all.pkl'
-CHECKPOINT_PATH = './checkpoints/202003271843_crnn_lstm_ph_all_v1/weights.200000.h5'
-BATCH_SIZE = 100
+CHECKPOINT_PATH = './checkpoints/202004011502_crnn_lstm_ph_all_v1/weights.110000.h5'
+BATCH_SIZE = 1000
 
 # Validation
 val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
@@ -50,6 +51,8 @@ char_count = 0
 correct_word_count = 0
 
 word_recognition_rate = 0
+
+stt = time.time()
 
 j = 0
 while j < BATCH_SIZE:
@@ -89,3 +92,5 @@ print('mean editdistance             %0.3f' % mean_ed)
 print('mean normalized editdistance  %0.3f' % mean_ed_norm)
 print('character recognition rate    %0.3f' % character_recognition_rate)
 print('word recognition rate         %0.3f' % word_recognition_rate)
+
+print('processing time : {:.2f}'.format(time.time() - stt))
