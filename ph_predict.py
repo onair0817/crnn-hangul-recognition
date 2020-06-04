@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import os
 import editdistance
 import pickle
@@ -8,15 +9,35 @@ from crnn_model import CRNN
 from crnn_data import InputGenerator
 from crnn_utils import decode
 
+import tensorflow as tf
+
 import ph_utils
 from ph_gt_data import GTUtility
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    # Currently, memory growth needs to be the same across GPUs
+    for gpu in gpus:
+      tf.config.experimental.set_memory_growth(gpu, True)
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+  except RuntimeError as e:
+    # Memory growth must be set before GPUs have been initialized
+    print(e)
+
 
 PICKLE_DIR = './pickles/'
-PICKLE_NAME = 'printed_hangul_all.pkl'
-CHECKPOINT_PATH = './checkpoints/202003271843_crnn_lstm_ph_all_v1/weights.200000.h5'
-PLOT_NAME = 'crnn_lstm_ph_all_v1'
+
+# AI-HUB
+# PICKLE_NAME = 'printed_hangul_all.pkl'
+# CHECKPOINT_PATH = './checkpoints/202004011502_crnn_lstm_ph_all_v1/weights.110000.h5'
+# PLOT_NAME = 'crnn_lstm_ph_all_v1'
+
+# AIG-IDR
+PICKLE_NAME = 'idr_receipt_only.pkl'
+CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_aig_v1/weights.004000.h5'
+PLOT_NAME = 'crnn_lstm_aig_v1'
 
 # Validation
 val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
@@ -48,14 +69,16 @@ res = model_pred.predict(d[0]['image_input'])
 mean_ed = 0
 mean_ed_norm = 0
 
-font = {'family': 'sans',
+font = {'family': 'NanumGothic',
         'color': 'black',
         'weight': 'normal',
-        'size': 14,
+        'size': 10,
         }
 
+ph_utils.folder_exists('./predict_results', create_=True)
+
 # for i in range(len(res)):
-for i in range(50):
+for i in range(len(res)):
     # best path, real ocr applications use beam search with dictionary and language model
     chars = [ph_dict[c] for c in np.argmax(res[i], axis=1)]
     gt_str = d[0]['source_str'][i]
@@ -78,8 +101,8 @@ for i in range(50):
     plt.text(0, 60, 'GT: %-24s RT: %-24s %0.2f' % (gt_str, res_str, ed_norm), fontdict=font)
 
     # file_name = 'plots/%s_recognition_%03d.pgf' % (plot_name, i)
-    file_name = 'plots/%s_recognition_%03d.png' % (PLOT_NAME, i)
-    # plt.savefig(file_name, bbox_inches='tight', dpi=300)
+    file_name = './predict_results/%s_recognition_%03d.png' % (PLOT_NAME, i)
+    plt.savefig(file_name, bbox_inches='tight', dpi=300)
     print(file_name)
 
     plt.show()

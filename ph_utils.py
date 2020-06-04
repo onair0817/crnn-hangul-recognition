@@ -4,10 +4,118 @@ import matplotlib.pyplot as plt
 import pickle
 import os
 import cv2
+import sys
+import glob
 import numpy as np
 
 from itertools import chain
 from sklearn.feature_extraction.text import CountVectorizer
+
+RED     = (255,   0,   0)
+GREEN   = (  0, 255,   0)
+BLUE    = (  0,   0, 255)
+CYAN    = (  0, 255, 255)
+MAGENTA = (255,   0, 255)
+YELLOW  = (255, 255,   0)
+WHITE   = (255, 255, 255)
+BLACK   = (  0,   0,   0)
+
+IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'tif', 'tiff']
+VIDEO_EXTENSIONS = ['mp4', 'avi', 'mkv']
+AUDIO_EXTENSIONS = ['mp3']
+META_EXTENSION = ['json']
+IMG_EXTENSIONS = IMAGE_EXTENSIONS
+CSV_EXTENSIONS = ['csv']
+
+COLOR_ARRAY_RGBCMY = [RED, GREEN, BLUE, CYAN, MAGENTA, YELLOW]
+COLORS = COLOR_ARRAY_RGBCMY
+
+DEV_NULL = open(os.devnull, 'w')
+
+
+def folder_exists(in_dir, exit_=False, create_=False, print_=False):
+    """
+    Check if a directory exists or not. If not, create it according to input argument.
+    :param in_dir:
+    :param exit_:
+    :param create_:
+    :param print_:
+    :return:
+    """
+    if not in_dir:
+        return
+
+    if os.path.isdir(in_dir):
+        if print_:
+            print(" # Info: directory, {}, already existed.".format(in_dir))
+        return True
+    else:
+        if create_:
+            try:
+                print(in_dir)
+                os.makedirs(in_dir)
+            except:
+                print(" @ Error: make_dirs in check_directory_existence routine...\n")
+                sys.exit()
+        else:
+            if print_:
+                print("\n @ Warning: directory not found, {}.\n".format(in_dir))
+            if exit_:
+                sys.exit()
+        return False
+
+
+def file_exists(filename, print_=False, exit_=False):
+    """
+    Check if a file exists or not.
+    :param filename:
+    :param print_:
+    :param exit_:
+    :return True/False:
+    """
+    if not os.path.isfile(filename):
+        if print_ or exit_:
+            print("\n @ Warning: file not found, {}.\n".format(filename))
+        if exit_:
+            sys.exit()
+        return False
+    else:
+        return True
+
+
+def get_filenames(dir_path, prefixes=('',), extensions=('',), recursive_=False, exit_=False):
+    """
+    Find all the files rting with prefixes or ending with extensions in the directory path.
+    ${dir_path} argument can accept file.
+    :param dir_path:
+    :param prefixes:
+    :param extensions:
+    :param recursive_:
+    :param exit_:
+    :return:
+    """
+    if os.path.isfile(dir_path):
+        return [dir_path]
+
+    if not os.path.isdir(dir_path):
+        return []
+
+    dir_name = os.path.dirname(dir_path)
+
+    filenames = glob.glob(dir_name + '**/**', recursive=recursive_)
+    for i in range(len(filenames)-1, -1, -1):
+        basename = os.path.basename(filenames[i])
+        if not (os.path.isfile(filenames[i]) and
+                basename.startswith(tuple(prefixes)) and
+                basename.endswith(tuple(extensions))):
+            del filenames[i]
+
+    if len(filenames) == 0:
+        print(" @ Error: no file detected in {}".format(dir_path))
+        if exit_:
+            sys.exit(1)
+
+    return filenames
 
 
 def create_pickle(gt_data, output_dir, fname):

@@ -7,6 +7,9 @@ import time
 from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from livelossplot.keras import PlotLossesCallback
+from keras.backend.tensorflow_backend import set_session
+
+import tensorflow as tf
 
 from crnn_model import CRNN
 from crnn_data import InputGenerator
@@ -16,12 +19,26 @@ from utils.training import Logger, ModelSnapshot
 import ph_utils
 from ph_gt_data import GTUtility
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+  try:
+    # Currently, memory growth needs to be the same across GPUs
+    for gpu in gpus:
+      tf.config.experimental.set_memory_growth(gpu, True)
+    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+  except RuntimeError as e:
+    # Memory growth must be set before GPUs have been initialized
+    print(e)
 
 PICKLE_DIR = './pickles/'
-PICKLE_NAME = 'printed_hangul_all.pkl'
-EXPERIMENT = 'crnn_lstm_ph_all_v2'
-CHECKPOINT_PATH = './checkpoints/202003261148_crnn_lstm_ph_all_v1/weights.030000.h5'
+# PICKLE_NAME = 'printed_hangul_all.pkl'
+# EXPERIMENT = 'crnn_lstm_ph_all_v2'
+# CHECKPOINT_PATH = './checkpoints/202003261148_crnn_lstm_ph_all_v1/weights.030000.h5'
+
+PICKLE_NAME = 'idr_receipt_only.pkl'
+EXPERIMENT = 'crnn_lstm_aig_v1'
+# CHECKPOINT_PATH = './checkpoints/202003261148_crnn_lstm_ph_all_v1/weights.030000.h5'
 
 # Train
 train_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_train.pkl'
@@ -36,9 +53,16 @@ with open(val_pkl, 'rb') as f:
 ph_dict = ph_utils.get_ph_dict(data_path=PICKLE_DIR, file_name=PICKLE_NAME)
 print(len(ph_dict))
 
+# AI-HUB
+# input_width = 256
+# input_height = 32
+# batch_size = 128
+
+# AIG IDR
 input_width = 256
 input_height = 32
-batch_size = 128
+batch_size = 16
+
 input_shape = (input_width, input_height, 1)
 
 model, model_pred = CRNN(input_shape, len(ph_dict), gru=False)
@@ -71,7 +95,7 @@ hist = model.fit_generator(generator=gen_train.generate(),  # batch_size here?
                            validation_steps=gt_util_val.num_objects // batch_size,
                            callbacks=[
                                # ModelCheckpoint(check_dir + '/weights.{epoch:03d}.h5', verbose=1, save_weights_only=True),
-                               ModelSnapshot(check_dir, 10000),
+                               ModelSnapshot(check_dir, 1000),
                                Logger(check_dir),
                                EarlyStopping(monitor='val_loss', mode='auto', restore_best_weights=True, verbose=1, patience=20)
                            ],
