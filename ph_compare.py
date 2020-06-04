@@ -4,20 +4,29 @@ import pytesseract as tess
 import cv2
 import glob
 import sys
-import re
 import time
 import json
-import pickle
+import tensorflow as tf
 
 from PIL import Image
 from crnn_model import CRNN
-from crnn_data import InputGenerator
+from crnn_data import crop_words
 from crnn_utils import decode
 
 import ph_utils
 from ph_gt_data import GTUtility
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '0'
+gpus = tf.config.experimental.list_physical_devices('GPU')
+if gpus:
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+        logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
 
 
 def get_filenames(dir_path, prefixes=('',), extensions=('',), recursive_=False, exit_=False):
@@ -40,7 +49,7 @@ def get_filenames(dir_path, prefixes=('',), extensions=('',), recursive_=False, 
     dir_name = os.path.dirname(dir_path)
 
     filenames = glob.glob(dir_name + '**/**', recursive=recursive_)
-    for i in range(len(filenames)-1, -1, -1):
+    for i in range(len(filenames) - 1, -1, -1):
         basename = os.path.basename(filenames[i])
         if not (os.path.isfile(filenames[i]) and
                 basename.startswith(tuple(prefixes)) and
@@ -79,7 +88,7 @@ def imread(img_file, color_fmt='RGB'):
     """
     if isinstance(img_file, str):
         pass
-    elif isinstance(img_file, np.ndarray):     # not isinstance(img_file, str):
+    elif isinstance(img_file, np.ndarray):  # not isinstance(img_file, str):
         # print(" % Warning: input is NOT a string for image filename")
         # 이 경우는 img_file 이 파일 이름이 아니고 numpy array 일 경우 img_file 을 return 하는 기능이다.
         # 따라서 None 을 return 하지 말고 img_file 이 numpy array 인지를 check 하도록 수정하는 것이 좋다.
@@ -162,14 +171,62 @@ for idx, fname in enumerate(img_fnames):
             if item['id'] == core_name:
                 ans = item['text']
 
-    img = Image.open(fname)
-    # convert image to numpy array
-    data = np.asarray(img)
-    print(type(data))
-    # summarize shape
-    print(data.shape)
+    img = cv2.imread(fname)
 
-    res = model.predict(np.resize(data, (128, 256, 32, 1)))
+    inputs = []
+    boxes = []
+
+    x = 0
+    y = 0
+    w = img.shape[1]
+    h = img.shape[0]
+    img_width = int(w)
+    img_height = int(h)
+    box = np.array([x, y, x + w, y, x + w, y + h, x, y + h], dtype=np.float32)
+    boxes.append(box)
+    boxes = np.asarray(boxes)
+
+    boxes[:, 0::2] /= img_width
+    boxes[:, 1::2] /= img_height
+
+    boxes = np.concatenate([boxes, np.ones([boxes.shape[0], 1])], axis=1)
+
+    boxes = np.copy(boxes[:, :-1])
+
+    # drop boxes with vertices outside the image
+    mask = np.array([not (np.any(b < 0.) or np.any(b > 1.)) for b in boxes])
+    boxes = boxes[mask]
+
+    if len(boxes) == 0: continue
+
+    try:
+        words = crop_words(img, boxes, input_height, input_width, True)
+    except Exception as e:
+        import traceback
+
+        print(traceback.format_exc())
+        print(fname)
+        continue
+
+    mask = np.array([w.shape[1] > w.shape[0] for w in words])
+    words = [words[j] for j in range(len(words)) if mask[j]]
+    if len(words) == 0: continue
+
+    idxs_words = np.arange(len(words))
+    np.random.shuffle(idxs_words)
+    words = [words[j] for j in idxs_words]
+
+    inputs.extend(words)
+
+    images = np.ones([1, input_width, input_height, 1])
+    images[0] = inputs[0].transpose(1, 0, 2)
+
+    res = model.predict(images)
+
+    # img = cv2.imread(fname, cv2.IMREAD_GRAYSCALE)
+    # img = cv2.resize(img, (input_height, input_width))
+    # img = img[np.newaxis, :, :, np.newaxis]
+    # res = model.predict(img, batch_size=128)
 
     print(type(res))
 
@@ -194,4 +251,3 @@ for idx, fname in enumerate(img_fnames):
         break
 
 print(" # Total time : {:.2f}".format(time.time() - start_time))
-
