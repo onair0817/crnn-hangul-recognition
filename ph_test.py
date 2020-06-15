@@ -26,12 +26,21 @@ if gpus:
     print(e)
 
 PICKLE_DIR = './pickles/'
+
+# AI-HUB
 PICKLE_NAME = 'printed_hangul_all.pkl'
 CHECKPOINT_PATH = './checkpoints/202004011502_crnn_lstm_ph_all_v1/weights.110000.h5'
+
+# AIG-IDR
+# PICKLE_NAME = 'idr_receipt_only_2000.pkl'
+# CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_idr_receipt_v1/weights.004000.h5'
+# PICKLE_NAME = 'idr_receipt_only_5000.pkl'
+# CHECKPOINT_PATH = './checkpoints/202006081103_crnn_lstm_idr_receipt_v2.2/weights.002000.h5'
 BATCH_SIZE = 1000
 
 # Validation
-val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
+# val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
+val_pkl = PICKLE_DIR + 'idr_receipt_only_5000_val.pkl'
 with open(val_pkl, 'rb') as f:
     gt_util_val = pickle.load(f)
 
@@ -99,9 +108,9 @@ character_recognition_rate = (char_count - sum_ed) / char_count
 word_recognition_rate = correct_word_count / j
 
 print()
-print('mean editdistance             %0.3f' % mean_ed)
-print('mean normalized editdistance  %0.3f' % mean_ed_norm)
-print('character recognition rate    %0.3f' % character_recognition_rate)
-print('word recognition rate         %0.3f' % word_recognition_rate)
+print(' # Mean ED (edit-distance)             %0.3f' % mean_ed)
+print(' # Mean normalized ED (edit-distance)  %0.3f' % mean_ed_norm)
+print(' # Character recognition rate    %0.3f' % (character_recognition_rate * 100.))
+print(' # Word recognition rate         %0.3f' % (word_recognition_rate * 100.))
 
-print('processing time : {:.2f}'.format(time.time() - stt))
+print(' # Processing time : {:.2f}'.format(time.time() - stt))

@@ -42,9 +42,16 @@ def random_split(self, split=0.8):
 
 
 PICKLE_DIR = './pickles/'
-PICKLE = 'printed_hangul_word.pkl'
-TRAIN = 'printed_hangul_word_train.pkl'
-VALIDATION = 'printed_hangul_word_val.pkl'
+
+# AI-HUB
+# PICKLE = 'printed_hangul_word.pkl'
+# TRAIN = 'printed_hangul_word_train.pkl'
+# VALIDATION = 'printed_hangul_word_val.pkl'
+
+# AIG-IDR
+PICKLE = 'idr_receipt_60000.pkl'
+TRAIN = 'idr_receipt_60000_train.pkl'
+VALIDATION = 'idr_receipt_60000_val.pkl'
 
 with open(PICKLE_DIR + PICKLE, 'rb') as f:
     gt_util_cracker = pickle.load(f)

@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import os
+import time
 import editdistance
 import pickle
 
@@ -35,12 +36,15 @@ PICKLE_DIR = './pickles/'
 # PLOT_NAME = 'crnn_lstm_ph_all_v1'
 
 # AIG-IDR
-PICKLE_NAME = 'idr_receipt_only.pkl'
-CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_aig_v1/weights.004000.h5'
-PLOT_NAME = 'crnn_lstm_aig_v1'
+# PICKLE_NAME = 'idr_receipt_only_2000.pkl'
+# CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_idr_receipt_v1/weights.004000.h5'
+PICKLE_NAME = 'idr_receipt_only_5000.pkl'
+CHECKPOINT_PATH = './checkpoints/202006081103_crnn_lstm_idr_receipt_v2.2/weights.002000.h5'
+PLOT_NAME = 'crnn_lstm_idr_receipt_v2.2'
 
 # Validation
-val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
+# val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
+val_pkl = PICKLE_DIR + 'idr_receipt_only_5000_val.pkl'
 with open(val_pkl, 'rb') as f:
     gt_util_val = pickle.load(f)
 
@@ -77,6 +81,8 @@ font = {'family': 'NanumGothic',
 
 ph_utils.folder_exists('./predict_results', create_=True)
 
+stt = time.time()
+
 # for i in range(len(res)):
 for i in range(len(res)):
     # best path, real ocr applications use beam search with dictionary and language model
@@ -112,4 +118,8 @@ for i in range(len(res)):
 mean_ed /= len(res)
 mean_ed_norm /= len(res)
 
-print('\nmean editdistance: %0.3f\nmean normalized editdistance: %0.3f' % (mean_ed, mean_ed_norm))
+print()
+print(' # Mean ED (edit-distance)             %0.3f' % mean_ed)
+print(' # Mean normalized ED (edit-distance)  %0.3f' % mean_ed_norm)
+
+print(' # Processing time : {:.2f}'.format(time.time() - stt))

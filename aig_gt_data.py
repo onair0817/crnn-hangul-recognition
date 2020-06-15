@@ -32,6 +32,7 @@ class GTUtility(BaseGTUtility):
         print(" # Total file number to be processed: {:d}.".format(len(img_fnames)))
 
         for idx, fname in enumerate(img_fnames):
+            print(" # Start processing ... <index: {} & file name: {}>".format(idx, fname))
 
             # Load json file
             with open(os.path.join(gt_path, fname), encoding='UTF8') as f:
@@ -45,7 +46,6 @@ class GTUtility(BaseGTUtility):
             image_name = ''
 
             # print(" # gt_data : {}".format(gt_data))
-
             for item in gt_data:
 
                 if 'text' in item:
@@ -55,7 +55,7 @@ class GTUtility(BaseGTUtility):
                     if only_with_label:
                         continue
                     else:
-                        self.text.append('')
+                        text.append('')
 
                 # print(' # item : {}'.format(item))
                 id = item['id']
@@ -85,23 +85,21 @@ class GTUtility(BaseGTUtility):
             self.data.append(boxes)
             self.text.append(text)
 
-            print(" # info : {} {} {} {}".format(id, image_name, boxes, text))
-
+            print(" # Info : {} {} {} {}".format(id, image_name, boxes, text))
             print(" # ID {} is added!".format(id))
 
         # Create data object in COCO-Text format
         self.init()
 
 
-DATA_PATH = '/diarl_data/crnn/aig/'
+DATA_PATH = '/diarl_data/crnn/hospital_receipt/ori_4991_aug_60000/'
 # DATA_PATH = 'C:/Users/admin/dev/data/'
 PICKLE_DIR = './pickles/'
-FILE_NAME = 'idr_receipt_only.pkl'
+FILE_NAME = 'idr_receipt_60000.pkl'
 
 if __name__ == '__main__':
     # Create GT data in COCO-Text format
     gt_util = GTUtility(data_path=DATA_PATH, only_with_label=True)
-
     ph_utils.create_pickle(gt_util, PICKLE_DIR, FILE_NAME)
 
     # Print contents of GT data

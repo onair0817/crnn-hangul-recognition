@@ -228,20 +228,21 @@ for idx, fname in enumerate(img_fnames):
     # img = img[np.newaxis, :, :, np.newaxis]
     # res = model.predict(img, batch_size=128)
 
+    # CRNN
     print(type(res))
-
     res_str = ''
-
     for i in range(len(res)):
         chars = [ph_dict[c] for c in np.argmax(res[i], axis=1)]
         res_str = decode(chars)
+    print(" # [{}] {} : {}".format(idx, ans, res_str))
 
+    # TESSERACT4
     # res = tess.image_to_string(img, lang=lang, config=tess_cfg)
     # res = res.replace('\n', '')
     # res = re.compile(u'[^a-zA-Z\u3131-\u3163\uac00-\ud7a3]+').sub(u' ', res)
     # res = ''.join([l for l in res if l not in HANGUL_CON_VOW_LIST])
     # res = res.replace(' ', '')
-    print("{} {} : {}".format(idx, ans, res_str))
+    # print(" # [{}] {} : {}".format(idx, ans, res))
 
     if ans == res_str:
         corr_cnt = corr_cnt + 1
