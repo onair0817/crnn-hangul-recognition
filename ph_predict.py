@@ -36,15 +36,17 @@ PICKLE_DIR = './pickles/'
 # PLOT_NAME = 'crnn_lstm_ph_all_v1'
 
 # AIG-IDR
-# PICKLE_NAME = 'idr_receipt_only_2000.pkl'
-# CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_idr_receipt_v1/weights.004000.h5'
-PICKLE_NAME = 'idr_receipt_only_5000.pkl'
-CHECKPOINT_PATH = './checkpoints/202006081103_crnn_lstm_idr_receipt_v2.2/weights.002000.h5'
-PLOT_NAME = 'crnn_lstm_idr_receipt_v2.2'
+# PICKLE_NAME = 'hospital_receipt_2000.pkl'
+# CHECKPOINT_PATH = './checkpoints/202006031202_crnn_lstm_hr_v1/weights.004000.h5'
+# PICKLE_NAME = 'hospital_receipt_5000.pkl'
+# CHECKPOINT_PATH = './checkpoints/202006081103_crnn_lstm_hr_v2.2/weights.002000.h5'
+PICKLE_NAME = 'hospital_receipt_60000.pkl'
+CHECKPOINT_PATH = './checkpoints/202006121139_crnn_lstm_hr_v3.0/weights.014000.h5'
+PLOT_NAME = 'crnn_lstm_hr_v3.0'
 
 # Validation
 # val_pkl = PICKLE_DIR + os.path.splitext(os.path.basename(PICKLE_NAME))[0] + '_val.pkl'
-val_pkl = PICKLE_DIR + 'idr_receipt_only_5000_val.pkl'
+val_pkl = PICKLE_DIR + 'hospital_receipt_5000_val.pkl'
 with open(val_pkl, 'rb') as f:
     gt_util_val = pickle.load(f)
 

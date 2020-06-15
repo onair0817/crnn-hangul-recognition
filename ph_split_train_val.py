@@ -49,9 +49,9 @@ PICKLE_DIR = './pickles/'
 # VALIDATION = 'printed_hangul_word_val.pkl'
 
 # AIG-IDR
-PICKLE = 'idr_receipt_60000.pkl'
-TRAIN = 'idr_receipt_60000_train.pkl'
-VALIDATION = 'idr_receipt_60000_val.pkl'
+PICKLE = 'hospital_receipt_60000.pkl'
+TRAIN = 'hospital_receipt_60000_train.pkl'
+VALIDATION = 'hospital_receipt_60000_val.pkl'
 
 with open(PICKLE_DIR + PICKLE, 'rb') as f:
     gt_util_cracker = pickle.load(f)

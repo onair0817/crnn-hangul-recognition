@@ -95,7 +95,7 @@ class GTUtility(BaseGTUtility):
 DATA_PATH = '/diarl_data/crnn/hospital_receipt/ori_4991_aug_60000/'
 # DATA_PATH = 'C:/Users/admin/dev/data/'
 PICKLE_DIR = './pickles/'
-FILE_NAME = 'idr_receipt_60000.pkl'
+FILE_NAME = 'hospital_receipt_60000.pkl'
 
 if __name__ == '__main__':
     # Create GT data in COCO-Text format
