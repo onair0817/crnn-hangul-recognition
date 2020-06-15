@@ -21,23 +21,28 @@ from ph_gt_data import GTUtility
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
 if gpus:
-  try:
-    # Currently, memory growth needs to be the same across GPUs
-    for gpu in gpus:
-      tf.config.experimental.set_memory_growth(gpu, True)
-    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-  except RuntimeError as e:
-    # Memory growth must be set before GPUs have been initialized
-    print(e)
+    try:
+        # Currently, memory growth needs to be the same across GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+            tf.config.experimental.set_virtual_device_configuration(
+                gpu,
+                [tf.config.experimental.VirtualDeviceConfiguration(memory_limit=8196)]
+            )
+        logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+        print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
+
+    except RuntimeError as e:
+        # Memory growth must be set before GPUs have been initialized
+        print(e)
 
 PICKLE_DIR = './pickles/'
 # PICKLE_NAME = 'printed_hangul_all.pkl'
 # EXPERIMENT = 'crnn_lstm_ph_all_v2'
 # CHECKPOINT_PATH = './checkpoints/202003261148_crnn_lstm_ph_all_v1/weights.030000.h5'
 
-PICKLE_NAME = 'idr_receipt_only.pkl'
-EXPERIMENT = 'crnn_lstm_aig_v1'
+PICKLE_NAME = 'hospital_receipt_60000.pkl'
+EXPERIMENT = 'crnn_lstm_hr_v3.0'
 # CHECKPOINT_PATH = './checkpoints/202003261148_crnn_lstm_ph_all_v1/weights.030000.h5'
 
 # Train
@@ -61,7 +66,7 @@ print(len(ph_dict))
 # AIG IDR
 input_width = 256
 input_height = 32
-batch_size = 16
+batch_size = 128
 
 input_shape = (input_width, input_height, 1)
 
@@ -97,7 +102,8 @@ hist = model.fit_generator(generator=gen_train.generate(),  # batch_size here?
                                # ModelCheckpoint(check_dir + '/weights.{epoch:03d}.h5', verbose=1, save_weights_only=True),
                                ModelSnapshot(check_dir, 1000),
                                Logger(check_dir),
-                               EarlyStopping(monitor='val_loss', mode='auto', restore_best_weights=True, verbose=1, patience=20)
+                               EarlyStopping(monitor='val_loss', mode='auto', restore_best_weights=True, verbose=1,
+                                             patience=20)
                            ],
                            initial_epoch=0)
 

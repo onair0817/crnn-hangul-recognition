@@ -6,6 +6,7 @@ import os
 import cv2
 import sys
 import glob
+import json
 import numpy as np
 
 from itertools import chain
@@ -146,15 +147,18 @@ def get_ph_dict(data_path, file_name):
     vect = CountVectorizer(analyzer='char').fit(text)
     charset = list(vect.vocabulary_.keys())
 
-    pattern = '[^가-힣]'  # 한글이 아닌 문자는 공백으로 바꿔준다
-    charset_dict = [re.sub(pattern, "", char) for char in charset]
+    # Only for receipt
+    labeled_texts = re.compile(u'[^a-zA-Z\u3131-\u3163\uac00-\ud7a3]+')
+    # Only hangul
+    # labeled_texts = re.compile(u'[^\u3131-\u3163\uac00-\ud7a3]+')
+    charset_dict = [labeled_texts.sub(u'', char) for char in charset]
+    print(" # charset_dict : {}".format(charset_dict))
     ph = [x for x in charset_dict if x != '']
-    ph = "".join(ph)
-    # print(ph)
-    # print(len(ph))
+    ph = "".join(ph).upper()
     ph = ph + string.digits + ' _'
-    # print(ph)
-    # print(len(ph))
+
+    print(ph)
+    print(len(ph))
 
     return ph
 
@@ -210,5 +214,24 @@ def get_image_with_box(data_path, num=10, att_type='syllable'):
         plt.savefig('images/box/' + img_name)
 
 
-# ph_dict = get_ph_dict(data_path='/diarl_data/hangul/', file_name='printed_hangul_all.pkl')
+def remove_spaces_of_labels_inside_json(dir):
+    img_fnames = sorted(get_filenames(dir, extensions=META_EXTENSION, recursive_=True, exit_=True))
+
+    for idx, fname in enumerate(img_fnames):
+        # Load json file
+        with open(os.path.join(dir, fname), encoding='UTF8') as f:
+            gt_data = json.load(f)
+
+        print("JSON : {}".format(gt_data))
+
+        for idx, item in enumerate(gt_data):
+            if 'text' in item:
+                gt_data[idx]['text'] = str(item['text']).replace(' ', '').replace(')', '').replace('(', '').replace('/', '')
+
+        with open(os.path.join(dir, fname), mode='w', encoding='utf-8') as f:
+            json.dump(gt_data, f, ensure_ascii=False)
+
+
+# remove_spaces_of_labels_inside_json(dir='/diarl_data/crnn/hospital_receipt/ori_4991_aug_60000/')
+# ph_dict = get_ph_dict(data_path='./pickles/', file_name='hospital_receipt_5000.pkl')
 # get_image_with_box(data_path='/diarl_data/hangul/', num=10, att_type='all')
