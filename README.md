@@ -1,2 +1,2 @@
 # crnn-printed-hangul
-CRNN-based printed Hangul training code
+Deep learning code for CRNN-based Hangul printed image recognition
