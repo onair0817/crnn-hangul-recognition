@@ -1,2 +1,2 @@
-# CRNN for Machine Printed Hangul Text Image Recognition
+# CRNN for Hangul Text Image Recognition
 >Deep learning code for machine printed hangul text image recognition based on CRNN
