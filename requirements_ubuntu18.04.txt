@@ -39,7 +39,7 @@ nbformat==5.0.4
 notebook==6.0.3
 numpy==1.18.2
 opencv-contrib-python==3.2.0.8
-opencv-python==3.2.0.8
+opencv-python==3.4.7.28
 opt-einsum==3.2.0
 pandas==1.0.2
 pandocfilters==1.4.2
